@@ -2,7 +2,11 @@
 
 Initialized project using [Vite](https://vitejs.dev/guide/) (React + TypeScript + Vite)
 
-## To run the project
+## To access the project quickly
+
+- <https://soroush3.github.io/hive-reusable-dropdown-menu/>
+
+## To run the project locally
 
 1. Clone the project
 2. Assuming [node](https://nodejs.org/en/download) is installed
