@@ -108,7 +108,7 @@ export default function App() {
         {/* MULTI SELECT WITH MANY OPTIONS */}
         <div style={styles.selectBox}>
           <div style={{marginBottom: 5}}>
-            {"Multi Select with with many options (5k)"}
+            {`Multi Select with many options: ${LOTS_LENGTH}`}
           </div>
           {bigMultiSelect}
           <div style={{marginTop: 20}}>
@@ -173,7 +173,7 @@ const RAP_SONG_OPTIONS: Option[] = [
   {label: "Believer", value: "believer"},
 ];
 
-const LOTS_LENGTH = 5000;
+const LOTS_LENGTH = 3000;
 
 const LOTS_OF_OPTIONS: Option[] = Array.from({length: LOTS_LENGTH}, (_, i) => {
   const currI = i++;
