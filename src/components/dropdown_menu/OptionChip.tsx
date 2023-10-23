@@ -6,18 +6,12 @@ type OptionChipProps = {
   readonly handleDelete?: (option: Option) => void;
 };
 
-export const OPTION_CHIP_DELETE_ID = "option-chip-delete";
-
 export default function OptionChip({option, handleDelete}: OptionChipProps) {
   return (
-    <div className="chip">
+    <div onClick={(e) => e.stopPropagation()} className="chip">
       <div className="chipText">{option.label}</div>
       {handleDelete ? (
-        <div
-          className="chipDelete"
-          id={OPTION_CHIP_DELETE_ID}
-          onClick={() => handleDelete?.(option)}
-        >
+        <div className="chipDelete" onClick={() => handleDelete?.(option)}>
           {/* ideally would use svg */}
           {"\u2715"}
         </div>

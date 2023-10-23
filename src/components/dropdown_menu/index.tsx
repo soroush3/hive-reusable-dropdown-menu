@@ -1,7 +1,7 @@
 import {CSSProperties, useEffect, useMemo, useRef, useState} from "react";
 import OptionItem from "./OptionItem";
 import "./style.css";
-import OptionChip, {OPTION_CHIP_DELETE_ID} from "./OptionChip";
+import OptionChip from "./OptionChip";
 
 export type Option = {
   readonly label: string;
@@ -11,20 +11,19 @@ export type Option = {
 type DropdownMenuProps = {
   readonly title?: string;
   readonly options: Option[]; // assume user doesn't pass duplicates
-  /** Let's you optionally pass down the options that are selected. */
+  /** Let's you optionally pass down the options that are selected. Useful for pre-selected items. */
   readonly selectedOptions?: Option[];
   /** Allows for the parent component to get the newly updated selections. For simplicity,
    * keeping the argument as an array for both single and multi select.
    */
   readonly handleChange?: (options: Option[]) => void;
-  /** Dictates if single or multiple values can be selected from the dropwdown. */
+  /** Dictates if multiple values can be selected from the dropwdown. */
   readonly multiSelect?: boolean;
-  /** This is here to allow for specific customization. Typically re-usables restrict modifications
-   * to things like width, height, etc..
-   */
-  readonly style?: CSSProperties;
+  readonly width?: string | number;
   /** Determines the max height of the options list. */
-  readonly optionsMaxHeight?: string;
+  readonly optionsMaxHeight?: string | number;
+  /** Limits the amount of chips shown for multi select. */
+  readonly limitChips?: number;
 };
 
 export default function DropdownMenu(props: DropdownMenuProps) {
@@ -34,8 +33,9 @@ export default function DropdownMenu(props: DropdownMenuProps) {
     selectedOptions: selectedOptionsProp,
     handleChange,
     multiSelect,
-    style,
+    width,
     optionsMaxHeight,
+    limitChips,
   } = props;
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -96,29 +96,32 @@ export default function DropdownMenu(props: DropdownMenuProps) {
         selectedOptions.filter((option) => option !== optionToDelete)
       );
     };
-    return selectedOptions.map((option) => (
-      <OptionChip
-        key={option.value}
-        option={option}
-        handleDelete={handleDelete}
-      />
-    ));
-  }, [selectedOptions]);
+    return selectedOptions
+      .slice(0, limitChips)
+      .map((option) => (
+        <OptionChip
+          key={option.value}
+          option={option}
+          handleDelete={handleDelete}
+        />
+      ));
+  }, [limitChips, selectedOptions]);
 
   return (
-    <div style={style} ref={dropdownRef}>
+    <div className="dropdownMenu" style={{width: width}} ref={dropdownRef}>
       <button
         className="dropdownButton"
-        onClick={({target}) => {
-          const targetEle = target as HTMLElement;
-          if (targetEle.id === OPTION_CHIP_DELETE_ID) return;
-          setIsOpen((isOpen) => !isOpen);
-        }}
+        onClick={() => setIsOpen((isOpen) => !isOpen)}
       >
         {selectedOptions.length ? (
           <>
             {multiSelect ? (
-              <div className="optionChipsContainer">{optionChips}</div>
+              <div className="optionChipsContainer">
+                {optionChips}{" "}
+                {limitChips && limitChips < selectedOptions.length
+                  ? `+${selectedOptions.length - limitChips}`
+                  : null}
+              </div>
             ) : (
               <div>{selectedOptions[0].label}</div>
             )}
@@ -126,6 +129,7 @@ export default function DropdownMenu(props: DropdownMenuProps) {
         ) : (
           title
         )}
+        {/* ................................ ideally would use svg */}
         <div className="caratSymbol">{isOpen ? "\u25b2" : "\u25bc"}</div>
       </button>
       {isOpen ? (
