@@ -2,6 +2,9 @@
 
 Initialized project using [Vite](https://vitejs.dev/guide/) (React + TypeScript + Vite)
 
+I added some comments around the code to provide some insight.\
+The next thing that I would have added in is search functionality which would be useful if there are many options.
+
 ## To access the project quickly
 
 - <https://soroush3.github.io/hive-reusable-dropdown-menu/>
